@@ -1,6 +1,6 @@
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
-const FLASH_DURATION_MS = 15000; // 15 seconds
+const FLASH_DURATION_MS = 3600000; // 15 seconds
 // -----------------------------------------------------------------------------
 // FIX: This constant MUST match the "source" path in vercel.json
 const VERSION_PROXY_PATH = '/api/version'; 
@@ -124,3 +124,4 @@ loadOffsets();
 fetchRobloxVersion();
 setInterval(fetchRobloxVersion, 5000); // Check every 5 seconds
 setInterval(loadOffsets, 5000);
+
