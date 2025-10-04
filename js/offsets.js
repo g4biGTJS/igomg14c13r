@@ -1,6 +1,6 @@
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
-const FLASH_DURATION_MS = 15000; // CHANGED: 15 seconds instead of 5
+const FLASH_DURATION_MS = 3600000; // CHANGED: 1 hour instead of 15 seconds
 
 function setStatus(status, version, versionBox, versionStatus, versionText) {
     versionText.textContent = version;
@@ -130,3 +130,4 @@ loadOffsets();
 fetchRobloxVersion();
 setInterval(fetchRobloxVersion, 5000); // CHANGED: 5 seconds instead of 30
 setInterval(loadOffsets, 5000);
+
