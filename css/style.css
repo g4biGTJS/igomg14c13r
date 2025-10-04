@@ -249,16 +249,17 @@ body::before {
   top: calc(100% + 15px);
   left: 0;
   right: 0;
-  background: rgba(12, 15, 25, 0.95);
-  backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
+  background: rgba(15, 20, 30, 0.98);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-15px);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
   overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
 }
 
 .dropdown.active .dropdown-content {
@@ -271,12 +272,13 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 20px 28px;
+  padding: 24px 32px;
   color: white;
   text-decoration: none;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
+  background: transparent;
 }
 
 .dropdown-item:last-child {
@@ -284,8 +286,10 @@ body::before {
 }
 
 .dropdown-item:hover:not(.disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  transform: translateX(8px);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
+  transform: translateX(6px);
+  border-left: 3px solid rgba(255, 255, 255, 0.4);
+  padding-left: 29px;
 }
 
 .dropdown-item.disabled {
@@ -298,7 +302,7 @@ body::before {
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .version-container {
@@ -312,16 +316,18 @@ body::before {
   font-size: 1.15rem;
   font-weight: 600;
   white-space: nowrap;
+  letter-spacing: -0.3px;
 }
 
 .item-version {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.12);
-  padding: 5px 14px;
-  border-radius: 12px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 16px;
+  border-radius: 10px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: 'Courier New', monospace;
 }
 
 .badge {
@@ -340,6 +346,12 @@ body::before {
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
+.updating-badge {
+  color: white;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
 .coming-soon {
   color: white;
   background: linear-gradient(135deg, #f59e0b, #ea580c);
@@ -348,14 +360,15 @@ body::before {
 
 .item-stats {
   display: flex;
-  gap: 20px;
+  gap: 24px;
   font-size: 0.9rem;
 }
 
 .unc,
 .sunc {
-  color: #60a5fa;
+  color: #93c5fd;
   font-weight: 500;
+  font-family: 'Courier New', monospace;
 }
 
 /* Snowflakes */
