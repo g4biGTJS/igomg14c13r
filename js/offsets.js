@@ -28,7 +28,7 @@ async function fetchRobloxVersion() {
 
     try {
         // CHANGED: Direct URL for the version string
-        const apiUrl = 'https://robloxoffsets.com/version';
+        const apiUrl = 'https://raw.githubusercontent.com/g4biGTJS/nythrixhub/refs/heads/main/helloka';
 
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -130,3 +130,4 @@ loadOffsets();
 fetchRobloxVersion();
 setInterval(fetchRobloxVersion, 30000);
 setInterval(loadOffsets, 5000);
+
