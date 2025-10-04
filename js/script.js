@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     circle.style.top = `${e.clientY - rect.top}px`;
     discordBtn.appendChild(circle);
     setTimeout(() => circle.remove(), 600);
-    window.open("https://discord.gg/YOUR_INVITE_CODE", "_blank");
+    window.open("https://discord.gg/R7vT8nakDX", "_blank");
   });
 });
+
