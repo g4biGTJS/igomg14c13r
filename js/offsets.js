@@ -2,7 +2,7 @@ const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
 const FLASH_DURATION_MS = 15000; // 15 seconds
 // -----------------------------------------------------------------------------
-// VERCEL PROXY PATH: Matches the "source" in vercel.json
+// FIX: This constant MUST match the "source" path in vercel.json
 const VERSION_PROXY_PATH = '/api/version'; 
 // -----------------------------------------------------------------------------
 
@@ -31,23 +31,23 @@ async function fetchRobloxVersion() {
     lastChecked.textContent = new Date().toLocaleString();
 
     try {
-        // FIXED: Use the local proxy path defined in vercel.json
+        // FIX: Use the local proxy path defined in vercel.json
         const apiUrl = VERSION_PROXY_PATH; 
 
-        // Removed headers and method to simplify fetch, as Vercel handles the proxy
-        const response = await fetch(apiUrl);
+        // Simple fetch is sufficient with Vercel proxy
+        const response = await fetch(apiUrl); 
 
         if (!response.ok) {
-            // Throw a more informative error for the console
+            // Throw an error if the proxy or upstream API fails
             throw new Error(`Proxy error or upstream API error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
-        // Assuming the API returns a structure like: { "Windows": "..." }
-        const currentVersion = data.Windows; 
+        // NOTE: Assuming the original API returns the version as plain text.
+        // If it returns JSON, you will need to change this line to await response.json()
+        const currentVersion = (await response.text()).trim();
         
-        if (!currentVersion) {
-            throw new Error('API response missing Windows version.');
+        if (!currentVersion || currentVersion.length < 5) {
+             throw new Error('Invalid or empty version string received from API.');
         }
 
         const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
@@ -85,8 +85,9 @@ async function fetchRobloxVersion() {
     } catch (error) {
         console.error('Error fetching Roblox version:', error);
         setStatus('error', 'Failed to load', versionBox, versionStatus, versionText);
-        localStorage.removeItem(ROBLOX_VERSION_KEY);
-        localStorage.removeItem(UPDATE_TIMESTAMP_KEY);
+        // Do not clear the version if an error occurs, so we can display the last known version
+        // localStorage.removeItem(ROBLOX_VERSION_KEY);
+        // localStorage.removeItem(UPDATE_TIMESTAMP_KEY);
     }
 }
 // -----------------------------------------------------------------------------
@@ -120,8 +121,7 @@ function highlightCppSyntax(text) {
 
 async function loadOffsets() {
     try {
-        // FIXED: Using a simplified relative path for the local file.
-        // The timestamp is good for cache-busting, so we keep it.
+        // Ensuring local file path is correct
         const response = await fetch('./offsets/windows-offsets.txt?t=' + Date.now()); 
         const text = await response.text();
 
