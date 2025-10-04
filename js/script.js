@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         item.classList.add("shake");
         setTimeout(() => item.classList.remove("shake"), 500);
       } else {
-        alert(`Downloading: ${item.dataset.version}`);
+        alert(`Do you want to proceed with the download: ${item.dataset.version}`);
       }
     });
   });
@@ -42,4 +42,5 @@ document.addEventListener("DOMContentLoaded", () => {
     window.open("https://discord.gg/R7vT8nakDX", "_blank");
   });
 });
+
 
