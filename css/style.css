@@ -340,6 +340,13 @@ body::before {
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
+/* NEW: Style for the 'Updating' status */
+.updating-badge {
+  color: white;
+  background: linear-gradient(135deg, #3b82f6, #2563eb); /* A vibrant blue */
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
 .coming-soon {
   color: white;
   background: linear-gradient(135deg, #f59e0b, #ea580c);
@@ -637,7 +644,7 @@ body::before {
   border-radius: 12px;
   padding: 40px 50px;
   max-width: 95%; /* Much wider to accommodate content */
-  width: 1200px; /* Fixed width for desktop */
+  width: 1600px; /* Fixed width for desktop */
   margin: 0 auto;
   text-align: left;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
@@ -881,9 +888,4 @@ body::before {
   .team-grid {
     grid-template-columns: 1fr;
   }
-
 }
-
-
-
-
