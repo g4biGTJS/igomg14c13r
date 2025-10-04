@@ -3,7 +3,9 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/api/roblox",
+      // The local URL your JavaScript calls
+      "source": "/api/version",
+      // The original external API URL
       "destination": "https://robloxoffsets.com/version"
     }
   ]
