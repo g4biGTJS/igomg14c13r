@@ -246,98 +246,111 @@ body::before {
 
 .dropdown-content {
   position: absolute;
-  top: calc(100% + 15px);
+  top: calc(100% + 12px);
   left: 0;
   right: 0;
-  background: rgba(15, 20, 30, 0.98);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(18, 22, 35, 0.98) 0%, rgba(12, 15, 25, 0.98) 100%);
+  backdrop-filter: blur(40px) saturate(180%);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-15px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(-10px) scale(0.98);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 100;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
 }
 
 .dropdown.active .dropdown-content {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .dropdown-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 24px 32px;
+  gap: 14px;
+  padding: 20px 24px;
   color: white;
   text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
   background: transparent;
+  cursor: pointer;
 }
 
 .dropdown-item:last-child {
   border-bottom: none;
 }
 
+.dropdown-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, rgba(96, 165, 250, 0.15), transparent);
+  transition: width 0.3s ease;
+}
+
+.dropdown-item:hover:not(.disabled)::before {
+  width: 100%;
+}
+
 .dropdown-item:hover:not(.disabled) {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
-  transform: translateX(6px);
-  border-left: 3px solid rgba(255, 255, 255, 0.4);
-  padding-left: 29px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #60a5fa;
+  padding-left: 21px;
 }
 
 .dropdown-item.disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.item-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  margin-bottom: 16px;
+.dropdown-item.disabled:hover {
+  background: transparent;
 }
 
-.version-container {
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.item-left {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
+  gap: 6px;
 }
 
 .item-name {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  white-space: nowrap;
-  letter-spacing: -0.3px;
+  color: white;
+  letter-spacing: -0.2px;
 }
 
 .item-version {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 6px 16px;
-  border-radius: 10px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.15);
   font-family: 'Courier New', monospace;
 }
 
 .badge {
-  font-size: 0.8rem;
-  padding: 5px 12px;
-  border-radius: 10px;
-  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap; /* fix breaking issue */
+  letter-spacing: 0.8px;
+  white-space: nowrap;
 }
 
 .updated-badge {
@@ -360,15 +373,39 @@ body::before {
 
 .item-stats {
   display: flex;
-  gap: 24px;
-  font-size: 0.9rem;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.unc,
-.sunc {
-  color: #93c5fd;
-  font-weight: 500;
+.stat-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 0.95rem;
+  color: #60a5fa;
+  font-weight: 600;
   font-family: 'Courier New', monospace;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Snowflakes */
