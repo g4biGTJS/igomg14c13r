@@ -637,7 +637,7 @@ body::before {
   border-radius: 12px;
   padding: 40px 50px;
   max-width: 95%; /* Much wider to accommodate content */
-  width: 500px; /* Fixed width for desktop */
+  width: 700px; /* Fixed width for desktop */
   margin: 0 auto;
   text-align: left;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
@@ -883,4 +883,5 @@ body::before {
   }
 
 }
+
 
