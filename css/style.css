@@ -791,7 +791,7 @@ body::before {
 
 /* Changelogs Page Styles */
 .changelogs-container {
-  max-width: 1200px; /* Increased width */
+  max-width: 1800px; /* Increased width */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -1073,4 +1073,5 @@ body::before {
     grid-template-columns: 1fr;
   }
 }
+
 
