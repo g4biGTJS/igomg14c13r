@@ -155,5 +155,4 @@ namespace offsets {
     inline constexpr uintptr_t Workspace = 0x180;
     inline constexpr uintptr_t WorkspaceToWorld = 0x350;
     inline constexpr uintptr_t Viewmatrix = 0x4B0;
-
 }
