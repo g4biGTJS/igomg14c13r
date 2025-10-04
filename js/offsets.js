@@ -28,7 +28,7 @@ async function fetchRobloxVersion() {
 
     try {
         // CHANGED: Direct URL for the version string
-        const apiUrl = 'https://pastebin.com/raw/8G0x0PBC';
+        const apiUrl = 'https://pastefy.app/cQFmfFjH/raw';
 
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -130,6 +130,7 @@ loadOffsets();
 fetchRobloxVersion();
 setInterval(fetchRobloxVersion, 30000);
 setInterval(loadOffsets, 5000);
+
 
 
 
