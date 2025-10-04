@@ -1,6 +1,6 @@
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
-const FLASH_DURATION_MS = 3600000; // CHANGED: 1 hour instead of 15 seconds
+const FLASH_DURATION_MS = 15000; // 15 seconds
 
 function setStatus(status, version, versionBox, versionStatus, versionText) {
     versionText.textContent = version;
@@ -27,13 +27,13 @@ async function fetchRobloxVersion() {
     lastChecked.textContent = new Date().toLocaleString();
 
     try {
-        // CHANGED: Direct URL for the version string
-        const apiUrl = 'https://robloxoffsets.com/version';
+        // CHANGED: New API endpoint for Roblox versions
+        const apiUrl = 'https://weao.xyz/api/versions/current';
 
         const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
-                'Accept': 'text/plain', // Requesting plain text
+                'Accept': 'application/json', // Requesting JSON
             }
         });
 
@@ -41,9 +41,9 @@ async function fetchRobloxVersion() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // CHANGED: Read the response as plain text
-        const responseText = await response.text();
-        const currentVersion = responseText.trim(); 
+        // CHANGED: Parse JSON response and extract Windows version
+        const data = await response.json();
+        const currentVersion = data.Windows; // Extract Windows version from JSON
         
         const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
         let updateTimestamp = parseInt(localStorage.getItem(UPDATE_TIMESTAMP_KEY)) || 0;
@@ -128,7 +128,5 @@ async function loadOffsets() {
 
 loadOffsets();
 fetchRobloxVersion();
-setInterval(fetchRobloxVersion, 5000); // CHANGED: 5 seconds instead of 30
+setInterval(fetchRobloxVersion, 5000); // Check every 5 seconds
 setInterval(loadOffsets, 5000);
-
-
