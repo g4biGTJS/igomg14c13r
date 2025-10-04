@@ -31,19 +31,18 @@ async function fetchRobloxVersion() {
     lastChecked.textContent = new Date().toLocaleString();
 
     try {
-        // FIX: Use the local proxy path defined in vercel.json
+        // Use the local proxy path defined in vercel.json
         const apiUrl = VERSION_PROXY_PATH; 
 
-        // Simple fetch is sufficient with Vercel proxy
+        // Simple fetch to the local Vercel endpoint
         const response = await fetch(apiUrl); 
 
         if (!response.ok) {
-            // Throw an error if the proxy or upstream API fails
+            // Error if the proxy fails or the external API is down
             throw new Error(`Proxy error or upstream API error! Status: ${response.status}`);
         }
 
-        // NOTE: Assuming the original API returns the version as plain text.
-        // If it returns JSON, you will need to change this line to await response.json()
+        // The original API (robloxoffsets.com/version) likely returns plain text.
         const currentVersion = (await response.text()).trim();
         
         if (!currentVersion || currentVersion.length < 5) {
@@ -85,9 +84,6 @@ async function fetchRobloxVersion() {
     } catch (error) {
         console.error('Error fetching Roblox version:', error);
         setStatus('error', 'Failed to load', versionBox, versionStatus, versionText);
-        // Do not clear the version if an error occurs, so we can display the last known version
-        // localStorage.removeItem(ROBLOX_VERSION_KEY);
-        // localStorage.removeItem(UPDATE_TIMESTAMP_KEY);
     }
 }
 // -----------------------------------------------------------------------------
@@ -101,19 +97,10 @@ function highlightCppSyntax(text) {
     let result = escapeHtml(text);
 
     // Apply highlighting in order - most specific to least specific
-    // 1. Hex values
     result = result.replace(/\b(0x[0-9A-Fa-f]+)\b/g, '<span class="syntax-hex">$1</span>');
-
-    // 2. Keywords
     result = result.replace(/\b(namespace|inline|constexpr)\b/g, '<span class="syntax-keyword">$1</span>');
-
-    // 3. Types
     result = result.replace(/\b(uintptr_t)\b/g, '<span class="syntax-type">$1</span>');
-
-    // 4. Identifiers (capital letter word before =)
     result = result.replace(/\b([A-Z][a-zA-Z0-9_]*)\b(\s*=)/g, '<span class="syntax-identifier">$1</span>$2');
-
-    // 5. Braces
     result = result.replace(/([{}])/g, '<span class="syntax-brace">$1</span>');
 
     return result;
@@ -121,7 +108,7 @@ function highlightCppSyntax(text) {
 
 async function loadOffsets() {
     try {
-        // Ensuring local file path is correct
+        // Load local offsets file
         const response = await fetch('./offsets/windows-offsets.txt?t=' + Date.now()); 
         const text = await response.text();
 
