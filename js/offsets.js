@@ -1,6 +1,10 @@
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
 const FLASH_DURATION_MS = 15000; // 15 seconds
+// -----------------------------------------------------------------------------
+// VERCEL PROXY PATH: Matches the "source" in vercel.json
+const VERSION_PROXY_PATH = '/api/version'; 
+// -----------------------------------------------------------------------------
 
 function setStatus(status, version, versionBox, versionStatus, versionText) {
     versionText.textContent = version;
@@ -27,24 +31,25 @@ async function fetchRobloxVersion() {
     lastChecked.textContent = new Date().toLocaleString();
 
     try {
-        // CHANGED: New API endpoint for Roblox versions
-        const apiUrl = 'https://weao.xyz/api/versions/current';
+        // FIXED: Use the local proxy path defined in vercel.json
+        const apiUrl = VERSION_PROXY_PATH; 
 
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json', // Requesting JSON
-            }
-        });
+        // Removed headers and method to simplify fetch, as Vercel handles the proxy
+        const response = await fetch(apiUrl);
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Throw a more informative error for the console
+            throw new Error(`Proxy error or upstream API error! Status: ${response.status}`);
         }
 
-        // CHANGED: Parse JSON response and extract Windows version
         const data = await response.json();
-        const currentVersion = data.Windows; // Extract Windows version from JSON
+        // Assuming the API returns a structure like: { "Windows": "..." }
+        const currentVersion = data.Windows; 
         
+        if (!currentVersion) {
+            throw new Error('API response missing Windows version.');
+        }
+
         const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
         let updateTimestamp = parseInt(localStorage.getItem(UPDATE_TIMESTAMP_KEY)) || 0;
 
@@ -115,7 +120,9 @@ function highlightCppSyntax(text) {
 
 async function loadOffsets() {
     try {
-        const response = await fetch('offsets/windows-offsets.txt?t=' + Date.now());
+        // FIXED: Using a simplified relative path for the local file.
+        // The timestamp is good for cache-busting, so we keep it.
+        const response = await fetch('./offsets/windows-offsets.txt?t=' + Date.now()); 
         const text = await response.text();
 
         const highlightedText = highlightCppSyntax(text);
