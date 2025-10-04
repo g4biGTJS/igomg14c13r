@@ -27,13 +27,13 @@ async function fetchRobloxVersion() {
     lastChecked.textContent = new Date().toLocaleString();
 
     try {
-        const supabaseUrl = 'https://cwzzgecbytlinvjlboqh.supabase.co';
-        const apiUrl = `${supabaseUrl}/functions/v1/roblox-version`;
+        // CHANGED: Direct URL for the version string
+        const apiUrl = 'https://robloxoffsets.com/version';
 
         const response = await fetch(apiUrl, {
             method: 'GET',
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'text/plain', // Requesting plain text
             }
         });
 
@@ -41,8 +41,9 @@ async function fetchRobloxVersion() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
-        const currentVersion = data.clientVersionUpload;
+        // CHANGED: Read the response as plain text
+        const responseText = await response.text();
+        const currentVersion = responseText.trim(); 
         
         const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
         let updateTimestamp = parseInt(localStorage.getItem(UPDATE_TIMESTAMP_KEY)) || 0;
@@ -83,7 +84,7 @@ async function fetchRobloxVersion() {
         localStorage.removeItem(UPDATE_TIMESTAMP_KEY);
     }
 }
-
+// -----------------------------------------------------------------------------
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
