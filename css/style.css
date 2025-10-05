@@ -916,19 +916,18 @@ body::before {
   padding: 20px;
 }
 
-/* FIX: New rule to reliably center the 7th item (trinyxt) on a 3-column layout */
+/* FIX: New rule to reliably center the 4th item (cash7057) on a 3-column layout */
 @media (min-width: 900px) {
   .team-grid {
     grid-template-columns: repeat(3, 1fr); /* Force 3 columns */
-    /* Remove justify-content: center on the grid container itself to maintain column structure */
   }
 
-  /* Target the 7th card to span 1 column, and use margins to center it within the grid's space */
-  .team-grid .team-card:nth-child(7) {
+  /* Target the 4th card to span 1 column, and use margins to center it within the grid's space */
+  .team-grid .team-card:nth-child(4) {
     grid-column: 2 / 3; /* Force it into the middle column (the 2nd of 3) */
-    margin-left: 0; /* Clear previous centering attempt */
-    margin-right: 0; /* Clear previous centering attempt */
-    max-width: none; /* Reset max-width */
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
   }
 }
 /* END FIX */
