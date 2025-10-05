@@ -791,7 +791,8 @@ body::before {
 
 /* Changelogs Page Styles */
 .changelogs-container {
-  max-width: 1800px; /* Increased width */
+  max-width: 90%; /* Much wider container */
+  width: 1400px; /* Fixed width for large screens */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -804,9 +805,10 @@ body::before {
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
-  padding: 30px 35px;
+  padding: 40px 50px; /* Increased padding */
   transition: all 0.3s ease;
   animation: fadeInUp 1s ease-out;
+  width: 100%; /* Take full width of container */
 }
 
 .changelog-card.latest {
