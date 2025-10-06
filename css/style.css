@@ -326,7 +326,8 @@ body::before {
 .item-left {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
+  align-items: flex-start;
 }
 
 .item-name {
@@ -334,6 +335,9 @@ body::before {
   font-weight: 600;
   color: white;
   letter-spacing: -0.2px;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
 }
 
 .item-version {
@@ -341,6 +345,9 @@ body::before {
   color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
   font-family: 'Courier New', monospace;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
 }
 
 .badge {
