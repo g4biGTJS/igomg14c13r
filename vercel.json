@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/api/version",
-      "destination": "https://clientsettings.roblox.com/v2/client-version/WindowsPlayer"
+      "destination": "/api/version.js"
     }
   ]
 }
