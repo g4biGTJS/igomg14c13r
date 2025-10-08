@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// Glacier Executor - Offsets and Version Detection Script (Fixed)
+// Glacier Executor - Offsets and Version Detection Script (External Fetch)
 // -----------------------------------------------------------------------------
 
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
@@ -8,8 +8,8 @@ const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
 // Duration to display "Recently Updated" (in milliseconds)
 const FLASH_DURATION_MS = 3600000; // 15 seconds
 
-// API endpoint for Roblox version (should match vercel.json proxy)
-const VERSION_PROXY_PATH = '/api/version';
+// 🔗 External URL to fetch the latest Roblox version
+const EXTERNAL_VERSION_URL = 'https://robloxoffsets.com/version';
 
 // -----------------------------------------------------------------------------
 // UI helpers
@@ -31,7 +31,7 @@ function setStatus(status, version, versionBox, versionStatus, versionText) {
 }
 
 // -----------------------------------------------------------------------------
-// Fetch Roblox version and detect updates
+// Fetch Roblox version directly from external site
 // -----------------------------------------------------------------------------
 async function fetchRobloxVersion() {
   const versionBox = document.getElementById('versionBox');
@@ -42,13 +42,19 @@ async function fetchRobloxVersion() {
   lastChecked.textContent = new Date().toLocaleString();
 
   try {
-    const response = await fetch(VERSION_PROXY_PATH);
+    const response = await fetch(EXTERNAL_VERSION_URL + '?t=' + Date.now(), {
+      cache: 'no-cache',
+      headers: {
+        'Accept': '*/*',
+      }
+    });
+
     if (!response.ok) throw new Error(`Status: ${response.status}`);
 
     let currentVersion;
     const contentType = response.headers.get("content-type") || "";
 
-    // Support both text and JSON responses
+    // Support JSON or plain text
     if (contentType.includes("application/json")) {
       const data = await response.json();
       currentVersion = (data.version || "").trim();
@@ -65,7 +71,7 @@ async function fetchRobloxVersion() {
     let status = 'current';
     let remainingTime = 0;
 
-    // Detect new version (including first-ever fetch)
+    // Detect first-time or updated version
     if (!storedVersion || currentVersion !== storedVersion) {
       console.log(`🧊 New version detected: ${currentVersion} (old: ${storedVersion || 'none'})`);
       localStorage.setItem(ROBLOX_VERSION_KEY, currentVersion);
