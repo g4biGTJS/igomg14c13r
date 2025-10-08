@@ -4,7 +4,7 @@
   "rewrites": [
     {
       "source": "/api/version",
-      "destination": "https://robloxoffsets.com/version"
+      "destination": "https://weao.xyz/api/versions/current"
     }
   ]
 }
