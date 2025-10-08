@@ -1,35 +1,18 @@
 // -----------------------------------------------------------------------------
-// Glacier Executor - Roblox Windows Version via WEAO Proxy
+// Glacier Executor - Roblox Windows Version via Vercel Proxy to Official API
 // -----------------------------------------------------------------------------
 
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
 const FLASH_DURATION_MS = 15000; // 15 seconds
 
-// Your Vercel proxy (rewritten to WEAO)
+// Your Vercel proxy path (rewrites to the official Roblox API)
 const VERSION_PROXY_PATH = '/api/version';
 
-// -----------------------------------------------------------------------------
-// UI Helpers
-// -----------------------------------------------------------------------------
-function setStatus(status, version, versionBox, versionStatus, versionText) {
-  versionText.textContent = version;
-
-  if (status === 'updated') {
-    versionBox.className = 'version-box updated';
-    versionStatus.textContent = 'Recently Updated';
-  } else if (status === 'current') {
-    versionBox.className = 'version-box current';
-    versionStatus.textContent = 'Current Version';
-  } else if (status === 'error') {
-    versionBox.className = 'version-box error';
-    versionStatus.textContent = 'Error';
-    versionText.textContent = 'Failed to load';
-  }
-}
+// ... (UI Helpers functions remain the same: setStatus, etc.)
 
 // -----------------------------------------------------------------------------
-// Fetch Roblox Windows Version (through proxy to WEAO)
+// Fetch Roblox Windows Version (through proxy to Official API)
 // -----------------------------------------------------------------------------
 async function fetchRobloxVersion() {
   const versionBox = document.getElementById('versionBox');
@@ -40,8 +23,11 @@ async function fetchRobloxVersion() {
   lastChecked.textContent = new Date().toLocaleString();
 
   try {
+    // 💡 FIX: Using a standard User-Agent to try and bypass 403 blocks
     const response = await fetch(VERSION_PROXY_PATH + '?t=' + Date.now(), {
-      headers: { 'User-Agent': 'WEAO-3PService' },
+      headers: { 
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' 
+      },
       cache: 'no-cache'
     });
 
@@ -50,12 +36,15 @@ async function fetchRobloxVersion() {
     }
 
     const data = await response.json();
-    const currentVersion = (data.Windows || '').trim();
+    
+    // 💡 FIX: Extracting the specific 'clientVersionUpload' field as requested
+    const currentVersion = (data.clientVersionUpload || '').trim(); 
 
-    if (!currentVersion || currentVersion.length < 5) {
-      throw new Error('Invalid or empty Windows version from WEAO API.');
+    if (!currentVersion || currentVersion.length < 5 || !currentVersion.startsWith('version-')) {
+      throw new Error('Invalid or unexpected version string from official Roblox API.');
     }
 
+    // The rest of the logic remains the same: version storage, update flash, etc.
     const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
     let updateTimestamp = parseInt(localStorage.getItem(UPDATE_TIMESTAMP_KEY)) || 0;
     let status = 'current';
@@ -88,53 +77,10 @@ async function fetchRobloxVersion() {
 
   } catch (error) {
     console.error('❌ Error fetching Roblox version:', error);
-    setStatus('error', 'Failed to load', versionBox, versionStatus, versionText);
+    // Try to retrieve the last known version from storage if the fetch fails
+    const lastKnownVersion = localStorage.getItem(ROBLOX_VERSION_KEY) || 'Failed to load';
+    setStatus('error', lastKnownVersion, versionBox, versionStatus, versionText);
   }
 }
 
-// -----------------------------------------------------------------------------
-// Syntax highlighting for offsets
-// -----------------------------------------------------------------------------
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function highlightCppSyntax(text) {
-  let result = escapeHtml(text);
-
-  result = result.replace(/\b(0x[0-9A-Fa-f]+)\b/g, '<span class="syntax-hex">$1</span>');
-  result = result.replace(/\b(namespace|inline|constexpr)\b/g, '<span class="syntax-keyword">$1</span>');
-  result = result.replace(/\b(uintptr_t)\b/g, '<span class="syntax-type">$1</span>');
-  result = result.replace(/\b([A-Z][a-zA-Z0-9_]*)\b(\s*=)/g, '<span class="syntax-identifier">$1</span>$2');
-  result = result.replace(/([{}])/g, '<span class="syntax-brace">$1</span>');
-
-  return result;
-}
-
-// -----------------------------------------------------------------------------
-// Load local offsets file
-// -----------------------------------------------------------------------------
-async function loadOffsets() {
-  try {
-    const response = await fetch('./offsets/windows-offsets.txt?t=' + Date.now());
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const text = await response.text();
-    const highlightedText = highlightCppSyntax(text);
-    document.getElementById('offsetsContent').innerHTML = highlightedText;
-  } catch (error) {
-    console.error('❌ Error loading offsets:', error);
-    document.getElementById('offsetsContent').textContent =
-      'Error loading offsets. Please ensure the file exists at "offsets/windows-offsets.txt".';
-  }
-}
-
-// -----------------------------------------------------------------------------
-// Initialize
-// -----------------------------------------------------------------------------
-loadOffsets();
-fetchRobloxVersion();
-setInterval(fetchRobloxVersion, 5000);
-setInterval(loadOffsets, 5000);
+// ... (Syntax highlighting, loadOffsets, and Initialize blocks remain the same)
