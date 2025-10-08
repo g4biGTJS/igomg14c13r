@@ -31,22 +31,21 @@ async function fetchRobloxVersion() {
     lastChecked.textContent = new Date().toLocaleString();
 
     try {
-        // Use the local proxy path defined in vercel.json
         const apiUrl = VERSION_PROXY_PATH; 
-
-        // Simple fetch to the local Vercel endpoint
-        const response = await fetch(apiUrl); 
+        const response = await fetch(apiUrl);
 
         if (!response.ok) {
-            // Error if the proxy fails or the external API is down
             throw new Error(`Proxy error or upstream API error! Status: ${response.status}`);
         }
 
-        // The original API (robloxoffsets.com/version) likely returns plain text.
-        const currentVersion = (await response.text()).trim();
-        
-        if (!currentVersion || currentVersion.length < 5) {
-             throw new Error('Invalid or empty version string received from API.');
+        // ✅ Parse JSON instead of plain text
+        const data = await response.json();
+
+        // ✅ Extract only the desired field
+        const currentVersion = data.clientVersionUpload?.trim();
+
+        if (!currentVersion) {
+            throw new Error('clientVersionUpload field missing or invalid in API response.');
         }
 
         const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
@@ -54,26 +53,24 @@ async function fetchRobloxVersion() {
 
         let status = 'current';
         let remainingTime = 0;
-        
-        if (currentVersion && currentVersion !== storedVersion) {
+
+        if (currentVersion !== storedVersion) {
             console.log(`New version detected: ${currentVersion}. Old: ${storedVersion}`);
-            
             localStorage.setItem(ROBLOX_VERSION_KEY, currentVersion);
             updateTimestamp = Date.now();
             localStorage.setItem(UPDATE_TIMESTAMP_KEY, updateTimestamp);
         }
 
         const timeSinceUpdate = Date.now() - updateTimestamp;
-        
+
         if (timeSinceUpdate < FLASH_DURATION_MS) {
             status = 'updated';
             remainingTime = FLASH_DURATION_MS - timeSinceUpdate;
         }
 
-        setStatus(status, currentVersion || 'Unknown', versionBox, versionStatus, versionText);
+        setStatus(status, currentVersion, versionBox, versionStatus, versionText);
 
         if (status === 'updated') {
-            console.log(`Showing 'Recently Updated'. Transitioning in ${remainingTime}ms.`);
             setTimeout(() => {
                 if (Date.now() - updateTimestamp >= FLASH_DURATION_MS) {
                     setStatus('current', currentVersion, versionBox, versionStatus, versionText);
@@ -124,4 +121,5 @@ loadOffsets();
 fetchRobloxVersion();
 setInterval(fetchRobloxVersion, 5000); // Check every 5 seconds
 setInterval(loadOffsets, 5000);
+
 
