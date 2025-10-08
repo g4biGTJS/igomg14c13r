@@ -1,18 +1,16 @@
 // -----------------------------------------------------------------------------
-// Glacier Executor - Offsets + WEAO Roblox Version Tracker
+// Glacier Executor - Roblox Windows Version via WEAO Proxy
 // -----------------------------------------------------------------------------
 
 const ROBLOX_VERSION_KEY = 'roblox_current_version';
 const UPDATE_TIMESTAMP_KEY = 'roblox_update_timestamp';
+const FLASH_DURATION_MS = 15000; // 15 seconds
 
-// Show “Recently Updated” for 15 seconds
-const FLASH_DURATION_MS = 15000;
-
-// WEAO API endpoint for live Roblox versions
-const WEAO_API_URL = 'https://weao.xyz/api/versions/current';
+// Your Vercel proxy (rewritten to WEAO)
+const VERSION_PROXY_PATH = '/api/version';
 
 // -----------------------------------------------------------------------------
-// UI helpers
+// UI Helpers
 // -----------------------------------------------------------------------------
 function setStatus(status, version, versionBox, versionStatus, versionText) {
   versionText.textContent = version;
@@ -31,7 +29,7 @@ function setStatus(status, version, versionBox, versionStatus, versionText) {
 }
 
 // -----------------------------------------------------------------------------
-// Fetch Roblox Windows version from WEAO API
+// Fetch Roblox Windows Version (through proxy to WEAO)
 // -----------------------------------------------------------------------------
 async function fetchRobloxVersion() {
   const versionBox = document.getElementById('versionBox');
@@ -42,20 +40,20 @@ async function fetchRobloxVersion() {
   lastChecked.textContent = new Date().toLocaleString();
 
   try {
-    const response = await fetch(WEAO_API_URL + '?t=' + Date.now(), {
+    const response = await fetch(VERSION_PROXY_PATH + '?t=' + Date.now(), {
       headers: { 'User-Agent': 'WEAO-3PService' },
       cache: 'no-cache'
     });
 
     if (!response.ok) {
-      throw new Error(`WEAO API error! Status: ${response.status}`);
+      throw new Error(`Proxy or upstream error! Status: ${response.status}`);
     }
 
     const data = await response.json();
     const currentVersion = (data.Windows || '').trim();
 
     if (!currentVersion || currentVersion.length < 5) {
-      throw new Error('Invalid or empty version string from WEAO.');
+      throw new Error('Invalid or empty Windows version from WEAO API.');
     }
 
     const storedVersion = localStorage.getItem(ROBLOX_VERSION_KEY);
@@ -63,9 +61,9 @@ async function fetchRobloxVersion() {
     let status = 'current';
     let remainingTime = 0;
 
-    // Detect new version or first-time run
+    // Detect first-time or updated version
     if (!storedVersion || currentVersion !== storedVersion) {
-      console.log(`🧊 New Windows version detected: ${currentVersion} (old: ${storedVersion || 'none'})`);
+      console.log(`🧊 New version detected: ${currentVersion} (old: ${storedVersion || 'none'})`);
       localStorage.setItem(ROBLOX_VERSION_KEY, currentVersion);
       updateTimestamp = Date.now();
       localStorage.setItem(UPDATE_TIMESTAMP_KEY, updateTimestamp);
@@ -138,7 +136,5 @@ async function loadOffsets() {
 // -----------------------------------------------------------------------------
 loadOffsets();
 fetchRobloxVersion();
-
-// Refresh every 5 seconds
 setInterval(fetchRobloxVersion, 5000);
 setInterval(loadOffsets, 5000);
